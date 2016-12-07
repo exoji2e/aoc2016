@@ -40,7 +40,10 @@ public class B {
 
     }
     public static boolean isAba(String s, int i) {
-        return s.charAt(i) == s.charAt(i+2) && s.charAt(i) != s.charAt(i+1) && s.charAt(i+1) != '[' && s.charAt(i+1) != ']';
+        return c(s, i) == c(s, i+2) && c(s, i) != c(s, i+1) && c(s, i+1) != '[' && c(s, i+1) != ']';
+    }
+    private static char c(String s, int i) {
+        return s.charAt(i);
     }
 }
 class Sc {

@@ -11,17 +11,14 @@ public class A {
         int c = 0;
         while(sc.hasM()) {
             String s = sc.n();
-            boolean haso = false;
-            boolean hasi = false;
-            int i = 0;
+            boolean haso = false, hasi = false;
             int depth = 0;
-            for(; i<s.length()-3; i++) {
+            for(int i = 0; i<s.length()-3; i++) {
                 if(s.charAt(i) == '[') depth++;
                 if(s.charAt(i) == ']') depth--;
-                if(depth == 0)
-                    haso = haso || isAbba(s,i);
-                else 
-                    hasi = hasi || isAbba(s,i);
+
+                if(depth == 0) haso = haso || isAbba(s,i);
+                else  hasi = hasi || isAbba(s,i);
                    
             }
             if(haso && !hasi) c++;
@@ -29,8 +26,11 @@ public class A {
         System.out.println(c);
 
     }
-    public static boolean isAbba(String s, int i) {
-        return s.charAt(i) == s.charAt(i+3) && s.charAt(i+1) == s.charAt(i+2) && s.charAt(i) != s.charAt(i+1);
+    private static boolean isAbba(String s, int i) {
+        return c(s, i) == c(s, i+3) && c(s, i+1) == c(s, i+2) && c(s, i) != c(s, i+1);
+    }
+    private static char c(String s, int i) {
+        return s.charAt(i);
     }
 }
 class Sc {
