@@ -14,7 +14,6 @@ public class A {
     }
     // Run with java -Xmx8G A, takes 30s to execute on my machine.
     public static void main(String args[]) {
-        Sc sc = new Sc(System.in);
         // Input description: 
         // for every even i; 
         // n[i] = placement of microship_i,
