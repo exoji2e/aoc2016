@@ -1,4 +1,4 @@
 #!/bin/bash
-javac A.java &&\
-java -Xmx8G A &&\
-java -Xmx8G A 2
+javac A.java
+time java A
+time java A 2

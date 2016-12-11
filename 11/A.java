@@ -1,7 +1,7 @@
 import java.util.LinkedList;
+import java.util.Arrays;
+import java.util.HashMap;
 public class A {
-    static int[] M;
-    static int lastid;
     private static class FuncCall{
         int[] n;
         int k;
@@ -23,22 +23,23 @@ public class A {
             n = new int[]{2, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}; // input part2
         else
             n = new int[]{2, 1, 1, 1, 1, 1, 0, 0, 0, 0}; //input part1
-        lastid = (1<<2*(n.length + 1))-1;
-        M = new int[lastid+1]; 
-        for(int i = 0; i<M.length; i++) {
-            M[i] = Integer.MAX_VALUE;
+        HashMap<String,Integer> map = new HashMap<>();
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i<=n.length; i++) {
+            sb.append(3);
         }
-
+        String fstate = sb.toString();
         LinkedList<FuncCall> bfs = new LinkedList<>();
         bfs.add(new FuncCall(n, 0, 0));
         while(!bfs.isEmpty()) {
             FuncCall f = bfs.removeFirst();
             if(f.e<0 || f.e>3) continue;
-            int inx = getindx(f.n, f.e);
+            sortx(f.n);
             if(!ok(f.n)) continue;
-            if(M[inx] <= f.k) continue;
-            M[inx] = f.k;
-            if(inx == lastid) break;
+            String s = getStr(f.n, f.e);
+            if(map.containsKey(s)) continue;
+            map.put(s, f.k);
+            if(s.equals(fstate)) break;
 
             for(int i = 0; i<f.n.length; i++) {
                 if(f.n[i] != f.e) continue;
@@ -61,7 +62,30 @@ public class A {
                 }
             }
         }
-        System.out.println(M[lastid]);
+        System.out.print(map.get(fstate));
+    }
+    private static class Pair implements Comparable<Pair> {
+        int x;
+        int y;
+        public Pair(int x, int y) {
+            this.x = x; this.y = y;
+        }
+        public int compareTo(Pair p) {
+            if(x != p.x) return x - p.x;
+            return y - p.y;
+        }
+    }
+
+    public static void sortx(int[] n) {
+        Pair[] pairs = new Pair[n.length/2];
+        for(int i = 0; i<pairs.length; i++) {
+            pairs[i] = new Pair(n[2*i],n[2*i+1]);
+        }
+        Arrays.sort(pairs);
+        for(int i = 0; i<pairs.length; i++) {
+            n[2*i] = pairs[i].x;
+            n[2*i+1] = pairs[i].y;
+        }
     }
     public static boolean ok(int []n) {
         for(int i = 0; i<n.length; i+=2) 
@@ -72,13 +96,12 @@ public class A {
 
         return true;
     }
-    public static int getindx(int n[], int e) {
-        int sum = e;
-        int fac = 4;
+    public static String getStr(int n[], int e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(e);
         for(int i = 0; i<n.length; i++) {
-            sum += fac*n[i];
-            fac *= 4;
+            sb.append(n[i]);
         }
-        return sum;
+        return sb.toString();
     }
 }
