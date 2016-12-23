@@ -16,7 +16,7 @@ public class A {
             if(a[0].equals(cpy)) {
                 int x = ch0(a[1]);
                 boolean valx = false;
-                if(!(x>= 0 && x <= 3)) {
+                if(!isRegister(x)) {
                      x = Integer.parseInt(a[1]);
                      valx = true;
                 }
@@ -33,11 +33,11 @@ public class A {
                 int y = ch0(a[2]);
                 boolean valx = false;
                 boolean valy = false;
-                if(!(x<=3 && x>=0)) {
+                if(!isRegister(x)) {
                     x = Integer.parseInt(a[1]);
                     valx = true;
                 }
-                if(!(y<=3 && y>=0)){
+                if(!isRegister(y)){
                     y = Integer.parseInt(a[2]);
                     valy = true;
                 }
@@ -48,17 +48,25 @@ public class A {
         }
         int i = 0;
         while(i<program.length) {
-            i = program[i].exec(reg, program, i);
+            Inst inst = program[i];
+            inst.exec(reg, program, i);
+            i = inst.next(reg, i);
         }
         System.out.println(reg[0]);
     }
     public static int ch0(String s) {
         return s.charAt(0) - 'a';
     }
+    public static boolean isRegister(int x) {
+        return x>=0 && x<=3;
+    }
 }
 abstract class Inst {
-    abstract int exec(int[] reg, Inst[] prog, int id);
+    abstract void exec(int[] reg, Inst[] prog, int id);
     abstract Inst toggle();
+    int next(int[] reg, int id) {
+        return id + 1;
+    }
 }
 
 class tgl extends Inst{
@@ -66,12 +74,11 @@ class tgl extends Inst{
     public tgl(int x) {
         this.x = x;
     }
-    int exec(int reg[], Inst[] prog, int id) {
+    void exec(int reg[], Inst[] prog, int id) {
         int place = id + reg[x];
         if(place>= 0 && place < prog.length) {
             prog[place] = prog[place].toggle();
         }
-        return id + 1;
     }
     Inst toggle() {
         return new inc(x);
@@ -86,15 +93,11 @@ class cpy extends Inst{
         this.x = x; this.valx = valx;
         this.y = y; this.valy = valy;
     }
-    int exec(int reg[], Inst[] prog, int id) {
-        if(valy) return id + 1;
+    void exec(int reg[], Inst[] prog, int id) {
+        if(valy) return;
         
-        if(valx) {
-            reg[y] = x;
-        } else {
-            reg[y] = reg[x]; 
-        }
-        return id + 1;
+        if(valx) reg[y] = x;
+        else reg[y] = reg[x]; 
     }
     Inst toggle() {
         return new jnz(x, valx, y, valy);
@@ -105,9 +108,8 @@ class inc extends Inst{
     public inc(int x) {
         this.x = x;
     }
-    int exec(int reg[], Inst[] prog, int id) {
+    void exec(int reg[], Inst[] prog, int id) {
         reg[x]++;
-        return id + 1;
     }
     Inst toggle() {
         return new dec(x);
@@ -118,9 +120,8 @@ class dec extends Inst{
     public dec(int x) {
         this.x = x;
     }
-    int exec(int reg[], Inst[] prog, int id) {
+    void exec(int reg[], Inst[] prog, int id) {
         reg[x]--;
-        return id + 1;
     }
     Inst toggle() {
         return new inc(x);
@@ -135,7 +136,9 @@ class jnz extends Inst{
         this.x = x; this.valx = valx;
         this.y = y; this.valy = valy;
     }
-    int exec(int reg[], Inst[] prog, int id) {
+    void exec(int reg[], Inst[] prog, int id) {
+    }
+    int next(int[] reg, int id) {
         if((valx && x!= 0) || (!valx && reg[x] != 0)) {
             if(valy) {
                 return id + y;
