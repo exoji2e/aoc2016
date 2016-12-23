@@ -8,7 +8,8 @@ public class A {
         }
         Inst[] program = new Inst[list.size()];
         int eggs = Integer.parseInt(args[0]);
-        int[] reg = new int[]{eggs,eggs,eggs,eggs};
+        //int[] reg = new int[]{eggs,eggs,eggs,eggs};
+        int[] reg = new int[]{eggs, 0, 0, 0};
         String cpy = "cpy", jnz = "jnz", inc = "inc", dec = "dec", tgl = "tgl";
 
         for(int i = 0; i<program.length; i++) {
